@@ -64,7 +64,21 @@ def newRestaurant():
     else:
         return render_template('newrestaurant.html')
 
-# Task 1: Create route for newMenuItem function here
+@app.route('/restaurant/<int:restaurant_id>/delete/', 
+           methods=['GET','POST'])
+def deleteRestaurant(restaurant_id):
+    restaurantToDelete = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    print restaurantToDelete
+    if request.method == 'POST':
+        session.delete(restaurantToDelete)
+        session.commit()
+        flash('Restaurant deleted from the menu!')
+        return redirect(url_for('restaurants'))
+    else:
+        return render_template(
+                'deleterestaurant.html', id=restaurant_id,
+                item=restaurantToDelete)
+
 @app.route('/restaurants/<int:restaurant_id>/new/', methods=['GET','POST'])
 def newMenuItem(restaurant_id):
     if request.method == 'POST':
@@ -88,13 +102,10 @@ def editMenuItem(restaurant_id, menu_id):
         flash('Menu item succesfully edited!')
         return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
     else:
-        # USE THE RENDER_TEMPLATE FUNCTION BELOW TO SEE THE VARIABLES YOU
-        # SHOULD USE IN YOUR EDITMENUITEM TEMPLATE
         return render_template(
             'editmenuitem.html', restaurant_id=restaurant_id, menu_id=menu_id,
             item=editedItem)
 
-# Task 3: Create a route for deleteMenuItem function here
 
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete/', 
            methods=['GET','POST'])
