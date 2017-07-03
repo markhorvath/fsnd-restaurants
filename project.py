@@ -56,7 +56,7 @@ def restaurantMenu(restaurant_id):
 @app.route('/restaurant/new/', methods=['GET','POST'])
 def newRestaurant():
     if request.method == 'POST':
-        newRestaurant = MenuItem(name = request.form['name'])
+        newRestaurant = Restaurant(name= request.form['name'])
         session.add(newRestaurant)
         session.commit()
         flash(request.form['name'] + ' added to Restaurants!')
